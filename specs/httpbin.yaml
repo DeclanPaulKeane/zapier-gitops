@@ -59,25 +59,25 @@ paths:
                   - now
                   - urls
 
-  /when/{human-timestamp}:
-    get:
-      tags:
-        - time
-      servers:
-        - url: http://now.httpbin.org
-        - url: https://now.httpbin.org
-      parameters:
-        - in: path
-          name: human-timestamp
-          required: true
-          schema:
-            anyOf:
-              - type: string # ????
-      responses:
-        '200':
-          $ref: '#/components/responses/TimestampResponse'
-        '500':
-          description: oops
+  # /when/{human-timestamp}:
+  #   get:
+  #     tags:
+  #       - time
+  #     servers:
+  #       - url: http://now.httpbin.org
+  #       - url: https://now.httpbin.org
+  #     parameters:
+  #       - in: path
+  #         name: human-timestamp
+  #         required: true
+  #         schema:
+  #           anyOf:
+  #             - type: string # ????
+  #     responses:
+  #       '200':
+  #         $ref: '#/components/responses/TimestampResponse'
+  #       '500':
+  #         description: oops
 
   /parse/{machine-timestamp}:
     get:
