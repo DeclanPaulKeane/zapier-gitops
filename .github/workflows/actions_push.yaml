@@ -1,0 +1,28 @@
+name: Action on convert openapi spec to kong configuration and add to Konnect
+
+on:
+  push:
+    branches: 
+      - master
+jobs:
+  deploy_to_kong:
+    runs-on: self-hosted
+    name: Action on Push to generate, validate and push config to Kong; Publish to Dev Portal
+    steps:        
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Generate Kong declarative configuration from Spec
+      run: |
+        /bin/sh -c 'inso generate config ./specs/httpbin.yaml --type declarative --tags "_KonnectService:blog" > /tmp/kong.yaml'
+    - name: Convert Kong Enterprise to Konnect
+      run: |
+        /bin/sh -c 'pushd /tmp &&  deck convert --from kong-gateway --to konnect --input-file kong.yaml --output-file kong-v2.yaml'
+    - name: Convert Deck configuration from 2 to 3
+      run: |
+        /bin/sh -c 'pushd /tmp &&  deck convert --from kong-gateway-2.x --to kong-gateway-3.x --input-file kong-v2.yaml --output-file kong-v3.yaml'
+    - name: Validate Kong declarative configuration
+      run: |
+        /bin/sh -c 'pushd /tmp && deck validate -s kong-v3.yaml'
+    - name: Deploy declarative config
+      run: |
+        /bin/sh -c 'pushd /tmp && deck sync --konnect-token kpat_Ivxhb9iptW1VZcS1fsBUQs6ZAmWR1tSu4fAVcwfLGgpA6B73p --konnect-runtime-group-name Zapier --select-tag blog -s kong-v3.yaml'
