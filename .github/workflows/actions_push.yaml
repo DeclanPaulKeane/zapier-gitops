@@ -3,7 +3,7 @@ name: Action on convert openapi spec to kong configuration and add to Konnect
 on:
   push:
     branches: 
-      - master
+      - main
 jobs:
   deploy_to_kong:
     runs-on: self-hosted
